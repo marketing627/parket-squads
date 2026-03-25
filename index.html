@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parket Squads -- Command Center</title>
+
+<!-- SEO & Social Sharing -->
+<meta name="description" content="Parket Squads -- 144 agentes de IA organizados em 12 squads especializados. Copywriting, branding, trafego, storytelling, cybersecurity e mais.">
+<meta name="author" content="Parket">
+<meta name="theme-color" content="#b08d57">
+
+<!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Parket Squads">
+<meta property="og:description" content="144 agentes de IA organizados em 12 squads especializados. Copywriting, branding, trafego, storytelling, cybersecurity e mais.">
+<meta property="og:image" content="https://parket.com.br/wp-content/uploads/2024/01/parket-og.png">
+<meta property="og:url" content="https://parket-squads.vercel.app">
+<meta property="og:site_name" content="Parket Squads">
+<meta property="og:locale" content="pt_BR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Parket Squads">
+<meta name="twitter:description" content="144 agentes de IA em 12 squads especializados. Command Center.">
+<meta name="twitter:image" content="https://parket.com.br/wp-content/uploads/2024/01/parket-og.png">
+
+<!-- Favicon (inline SVG) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a1a1a'/><text x='50' y='68' font-size='52' font-family='sans-serif' font-weight='bold' fill='%23b08d57' text-anchor='middle'>P</text></svg>">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface2: #f3f1ee;
+    --surface3: #eae7e2;
+    --border: #e5e1db;
+    --border2: #d4cfc7;
+    --gold: #b08d57;
+    --gold-light: #d4b87a;
+    --gold-subtle: rgba(176,141,87,0.08);
+    --gold-border: rgba(176,141,87,0.2);
+    --black: #1a1a1a;
+    --text: #313131;
+    --text2: #555555;
+    --muted: #8c8680;
+    --light: #b0aaa2;
+    --white: #ffffff;
+    --danger: #c44;
+    --success: #4a7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1380px; margin: 0 auto; padding: 0 32px; }
+
+  /* Header */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 16px; }
+
+  .logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--black);
+    letter-spacing: -0.5px;
+  }
+  .logo-accent { color: var(--gold); }
+
+  .logo-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+  }
+
+  .logo-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .header-stat {
+    text-align: right;
+  }
+  .header-stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--black);
+  }
+  .header-stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2.5s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 28px 0 24px;
+  }
+
+  .stat-item {
+    background: var(--white);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+
+  /* Search */
+  .search-bar {
+    margin-bottom: 24px;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-subtle);
+  }
+  .search-input::placeholder { color: var(--light); }
+
+  /* Layout */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  /* Sidebar */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .card-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 10px;
+    border-radius: 100px;
+  }
+
+  /* Squad list */
+  .squad-list { padding: 8px; }
+
+  .squad-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+  }
+  .squad-item:hover { background: var(--surface2); }
+  .squad-item.active {
+    background: var(--gold-subtle);
+    border-color: var(--gold-border);
+  }
+
+  .squad-indicator {
+    width: 3px;
+    height: 20px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+  .squad-item.active .squad-indicator { opacity: 1; }
+
+  .squad-info { flex: 1; min-width: 0; }
+  .squad-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .squad-item-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .squad-item-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--light);
+    flex-shrink: 0;
+  }
+
+  /* Quick start */
+  .quickstart-content { padding: 20px; }
+
+  .qs-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .qs-steps { display: flex; flex-direction: column; gap: 12px; }
+
+  .qs-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .qs-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .qs-content { flex: 1; }
+  .qs-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+
+  .cmd-box {
+    background: var(--black);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #e0d9cf;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .cmd-box:hover { background: #2a2a2a; }
+  .cmd-box code { flex: 1; }
+  .cmd-box .copy-label {
+    font-size: 10px;
+    color: var(--gold-light);
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+  .cmd-box:hover .copy-label { opacity: 1; }
+
+  /* Right panel */
+  .main-content { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+  /* Active agent bar */
+  .active-bar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s;
+  }
+  .active-bar.has-agent {
+    border-color: var(--gold-border);
+    background: linear-gradient(135deg, var(--white) 0%, rgba(176,141,87,0.03) 100%);
+  }
+
+  .active-avatar-wrap {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .active-avatar-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .active-initials {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .active-info { flex: 1; min-width: 0; }
+  .active-name { font-size: 15px; font-weight: 600; color: var(--black); }
+  .active-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .active-status {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 100px;
+    flex-shrink: 0;
+  }
+  .active-status.waiting {
+    background: var(--surface2);
+    color: var(--muted);
+  }
+  .active-status.active {
+    background: var(--gold-subtle);
+    color: var(--gold);
+    border: 1px solid var(--gold-border);
+  }
+
+  /* Agent grid */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .agent-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .agent-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+  .agent-card.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-subtle);
+  }
+
+  .agent-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .agent-photo {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .agent-card:hover .agent-photo { border-color: var(--border2); }
+  .agent-card.active .agent-photo { border-color: var(--gold); }
+
+  .agent-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .agent-photo .initials {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: -0.5px;
+  }
+
+  .agent-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+    line-height: 1.3;
+  }
+
+  .agent-card-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .agent-card-role {
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.4;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .agent-chief-tag {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Detail overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,26,0.5);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+  }
+  .overlay.show { display: flex; }
+
+  .detail {
+    background: var(--white);
+    border-radius: 16px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+  }
+
+  .detail-top {
+    padding: 32px 32px 20px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .detail-photo {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--border);
+  }
+  .detail-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .detail-photo .initials { font-size: 22px; font-weight: 600; color: var(--muted); }
+
+  .detail-info h2 { font-size: 22px; font-weight: 700; color: var(--black); letter-spacing: -0.3px; }
+  .detail-info .handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+  .detail-info .squad-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .detail-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .detail-close:hover { border-color: var(--text); color: var(--text); }
+
+  .detail-body {
+    padding: 0 32px 32px;
+  }
+
+  .detail-section { margin-bottom: 20px; }
+  .detail-section:last-child { margin-bottom: 0; }
+
+  .detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .detail-role-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .detail-cmd {
+    background: var(--black);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #e0d9cf;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .detail-cmd:last-child { margin-bottom: 0; }
+  .detail-cmd:hover { background: #2a2a2a; }
+  .detail-cmd .cp { font-size: 10px; color: var(--gold-light); opacity: 0; transition: opacity 0.15s; }
+  .detail-cmd:hover .cp { opacity: 1; }
+
+  .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .detail-tag {
+    font-size: 11px;
+    color: var(--text2);
+    background: var(--surface2);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .detail-sep {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* Terminal */
+  .terminal-card {
+    background: var(--black);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .terminal-top {
+    padding: 10px 16px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #666;
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 14px 16px;
+    height: 160px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .terminal-body::-webkit-scrollbar { width: 3px; }
+  .terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+  .log-line { display: flex; gap: 10px; }
+  .log-time { color: #555; font-size: 10px; white-space: nowrap; }
+  .log-tag { font-size: 10px; white-space: nowrap; }
+  .t-sys { color: var(--gold-light); }
+  .t-agent { color: #7ec;  }
+  .t-user { color: #fb8; }
+  .t-ok { color: #7c7; }
+  .t-info { color: #888; }
+  .log-msg { color: #aaa; font-size: 11px; }
+
+  /* Prompt */
+  .prompt-bar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .prompt-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    resize: none;
+    height: 44px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .prompt-input:focus { border-color: var(--gold); }
+  .prompt-input::placeholder { color: var(--light); }
+
+  .prompt-btn {
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 0 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    height: 44px;
+    transition: all 0.15s;
+  }
+  .prompt-btn:hover { background: #333; }
+
+  /* Response */
+  .response-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .response-header {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .typing-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: bounce 1.4s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:.3} 30%{transform:translateY(-5px);opacity:1} }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+    font-size: 13px;
+    grid-column: 1 / -1;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--black);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Gold accent line */
+  .gold-line {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 1px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .agents-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-stat { display: none; }
+    .container { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo">Parket<span class="logo-accent">.</span></div>
+        <div class="logo-sep"></div>
+        <div class="logo-sub">Squads</div>
+      </div>
+      <div class="header-right">
+        <div class="header-stat">
+          <div class="header-stat-num" id="headerAgentNum">144</div>
+          <div class="header-stat-label">Agentes</div>
+        </div>
+        <div class="status-pill">
+          <div class="status-dot"></div>
+          Sistema ativo
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" id="s-squads">0</div>
+      <div class="stat-label">Squads</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="s-agents">0</div>
+      <div class="stat-label">Agentes</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="s-tasks">0</div>
+      <div class="stat-label">Tasks</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="s-workflows">0</div>
+      <div class="stat-label">Workflows</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input class="search-input" id="searchInput" type="text" placeholder="Buscar agente, squad ou especialidade...">
+  </div>
+
+  <!-- Main layout -->
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Squads</span>
+          <span class="card-badge" id="squadBadge">12</span>
+        </div>
+        <div class="squad-list" id="squadList"></div>
+      </div>
+
+      <!-- Quick Start -->
+      <div class="card">
+        <div class="quickstart-content">
+          <div class="gold-line"></div>
+          <div class="qs-title">Como ativar os agentes</div>
+          <div class="qs-steps">
+            <div class="qs-step">
+              <div class="qs-num">1</div>
+              <div class="qs-content">
+                <div class="qs-label">Abra o terminal e entre no projeto</div>
+                <div class="cmd-box" onclick="copyCmd('cd ~/projetos/agentes && claude')">
+                  <code>cd ~/projetos/agentes && claude</code>
+                  <span class="copy-label">copiar</span>
+                </div>
+              </div>
+            </div>
+            <div class="qs-step">
+              <div class="qs-num">2</div>
+              <div class="qs-content">
+                <div class="qs-label">Ative qualquer agente com @</div>
+                <div class="cmd-box" onclick="copyCmd('@copy-chief')">
+                  <code>@nome-do-agente</code>
+                  <span class="copy-label">copiar</span>
+                </div>
+              </div>
+            </div>
+            <div class="qs-step">
+              <div class="qs-num">3</div>
+              <div class="qs-content">
+                <div class="qs-label">Veja comandos disponiveis</div>
+                <div class="cmd-box" onclick="copyCmd('*help')">
+                  <code>*help</code>
+                  <span class="copy-label">copiar</span>
+                </div>
+              </div>
+            </div>
+            <div class="qs-step">
+              <div class="qs-num">4</div>
+              <div class="qs-content">
+                <div class="qs-label">Execute uma task especifica</div>
+                <div class="cmd-box" onclick="copyCmd('*task create-offer')">
+                  <code>*task nome-da-task</code>
+                  <span class="copy-label">copiar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+      <!-- Active agent -->
+      <div class="active-bar" id="activeBar">
+        <div class="active-avatar-wrap" id="activeAvatarWrap">
+          <span class="active-initials" id="activeInitials">--</span>
+        </div>
+        <div class="active-info">
+          <div class="active-name" id="activeName">Selecione um agente</div>
+          <div class="active-handle" id="activeHandle">clique em um card para ativar</div>
+        </div>
+        <div class="active-status waiting" id="activeStatus">Aguardando</div>
+      </div>
+
+      <!-- Agents grid -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" id="gridTitle">Todos os Agentes</span>
+          <span class="card-badge" id="agentCount">144</span>
+        </div>
+        <div style="padding: 12px;">
+          <div class="agents-grid" id="agentsGrid"></div>
+        </div>
+      </div>
+
+      <!-- Terminal -->
+      <div class="terminal-card">
+        <div class="terminal-top">
+          <div class="t-dot" style="background:#e55"></div>
+          <div class="t-dot" style="background:#db3"></div>
+          <div class="t-dot" style="background:#5b5"></div>
+          <span class="terminal-title">activity.log</span>
+        </div>
+        <div class="terminal-body" id="termLog"></div>
+      </div>
+
+      <!-- Prompt -->
+      <div class="prompt-bar">
+        <textarea class="prompt-input" id="promptInput" placeholder="@copy-chief crie uma headline para meu produto..."></textarea>
+        <button class="prompt-btn" onclick="sendPrompt()">Enviar</button>
+      </div>
+
+      <!-- Response -->
+      <div class="response-card">
+        <div class="response-header">
+          <span>Passo a passo</span>
+          <span id="responseAgent">Parket Squads</span>
+        </div>
+        <div id="responseText" style="font-size:13px;line-height:1.8;color:var(--text2)">
+          <strong style="color:var(--black)">1.</strong> No terminal: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px">cd ~/projetos/agentes && claude</code><br><br>
+          <strong style="color:var(--black)">2.</strong> Ative um agente: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px">@copy-chief</code><br><br>
+          <strong style="color:var(--black)">3.</strong> Veja os comandos: <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px">*help</code><br><br>
+          <strong style="color:var(--black)">4.</strong> Clique em qualquer agente acima para ver detalhes e copiar o comando de ativacao.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Detail overlay -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail" id="detailPanel"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+// ===================================================================
+// DATA — 12 squads, 144 agentes (dados reais do projeto)
+// ===================================================================
+const squads = [
+  {
+    id: 'copy-squad', name: 'Copy Squad', color: '#c87941',
+    desc: '23 copywriters lendarios',
+    tasks: 13, workflows: 2,
+    agents: [
+      { name: 'Copy Chief', handle: 'copy-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Gary Halbert', handle: 'gary-halbert', role: 'Direct Response Legend' },
+      { name: 'Eugene Schwartz', handle: 'eugene-schwartz', role: 'Breakthrough Advertising' },
+      { name: 'Claude Hopkins', handle: 'claude-hopkins', role: 'Scientific Advertising' },
+      { name: 'Gary Bencivenga', handle: 'gary-bencivenga', role: 'Bullets & Headlines' },
+      { name: 'Robert Collier', handle: 'robert-collier', role: 'The Letter Book' },
+      { name: 'John Carlton', handle: 'john-carlton', role: 'Freelance Sales Copy' },
+      { name: 'Jim Rutz', handle: 'jim-rutz', role: 'Magalog King' },
+      { name: 'Dan Kennedy', handle: 'dan-kennedy', role: 'No BS Marketing' },
+      { name: 'Frank Kern', handle: 'frank-kern', role: 'Mass Control' },
+      { name: 'Russell Brunson', handle: 'russell-brunson', role: 'Funnels & Offers' },
+      { name: 'Todd Brown', handle: 'todd-brown', role: 'E5 Method' },
+      { name: 'Stefan Georgi', handle: 'stefan-georgi', role: 'VSL & RMBC' },
+      { name: 'Jon Benson', handle: 'jon-benson', role: 'Video Sales Letters' },
+      { name: 'Ry Schwartz', handle: 'ry-schwartz', role: 'Launch Copy' },
+      { name: 'Ben Settle', handle: 'ben-settle', role: 'Email Players' },
+      { name: 'Andre Chaperon', handle: 'andre-chaperon', role: 'Soap Opera Sequences' },
+      { name: 'Dan Koe', handle: 'dan-koe', role: 'One-Person Business' },
+      { name: 'David Ogilvy', handle: 'david-ogilvy', role: 'Brand Advertising' },
+      { name: 'David Deutsch', handle: 'david-deutsch', role: 'Long-Form Copy' },
+      { name: 'Joe Sugarman', handle: 'joe-sugarman', role: 'Triggers & Stories' },
+      { name: 'Clayton Makepeace', handle: 'clayton-makepeace', role: 'Health & Finance Copy' },
+      { name: 'Parris Lampropoulos', handle: 'parris-lampropoulos', role: 'Control Beater' },
+    ]
+  },
+  {
+    id: 'hormozi-squad', name: 'Hormozi Squad', color: '#b08d57',
+    desc: '16 agentes Hormozi frameworks',
+    tasks: 10, workflows: 2,
+    agents: [
+      { name: 'Hormozi Chief', handle: 'hormozi-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Hormozi Advisor', handle: 'hormozi-advisor', role: 'Conselheiro Geral' },
+      { name: 'Hormozi Offers', handle: 'hormozi-offers', role: '$100M Offers' },
+      { name: 'Hormozi Leads', handle: 'hormozi-leads', role: '$100M Leads' },
+      { name: 'Hormozi Pricing', handle: 'hormozi-pricing', role: 'Value-Based Pricing' },
+      { name: 'Hormozi Copy', handle: 'hormozi-copy', role: 'Copywriting' },
+      { name: 'Hormozi Ads', handle: 'hormozi-ads', role: 'Paid Advertising' },
+      { name: 'Hormozi Content', handle: 'hormozi-content', role: 'Content Engine' },
+      { name: 'Hormozi Hooks', handle: 'hormozi-hooks', role: 'Hook Generation' },
+      { name: 'Hormozi Launch', handle: 'hormozi-launch', role: 'Product Launch' },
+      { name: 'Hormozi Closer', handle: 'hormozi-closer', role: 'Sales & Closing' },
+      { name: 'Hormozi Workshop', handle: 'hormozi-workshop', role: 'Workshop Design' },
+      { name: 'Hormozi Retention', handle: 'hormozi-retention', role: 'Customer Retention' },
+      { name: 'Hormozi Scale', handle: 'hormozi-scale', role: 'Scaling Systems' },
+      { name: 'Hormozi Models', handle: 'hormozi-models', role: 'Business Models' },
+      { name: 'Hormozi Audit', handle: 'hormozi-audit', role: 'Business Audit' },
+    ]
+  },
+  {
+    id: 'traffic-masters', name: 'Traffic Masters', color: '#4a7fa5',
+    desc: '16 especialistas em trafego',
+    tasks: 9, workflows: 2,
+    agents: [
+      { name: 'Traffic Chief', handle: 'traffic-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Molly Pittman', handle: 'molly-pittman', role: 'Facebook Ads Strategy' },
+      { name: 'Ralph Burns', handle: 'ralph-burns', role: 'Scaling Expert' },
+      { name: 'Pedro Sobral', handle: 'pedro-sobral', role: 'Trafego Pago BR' },
+      { name: 'Depesh Mandalia', handle: 'depesh-mandalia', role: 'Facebook Mastery' },
+      { name: 'Kasim Aslam', handle: 'kasim-aslam', role: 'Google Ads' },
+      { name: 'Nicholas Kusmich', handle: 'nicholas-kusmich', role: 'Social Ads' },
+      { name: 'Tom Breeze', handle: 'tom-breeze', role: 'YouTube Ads' },
+      { name: 'Ad Midas', handle: 'ad-midas', role: 'Ad Optimization' },
+      { name: 'Media Buyer', handle: 'media-buyer', role: 'Media Buying' },
+      { name: 'Performance Analyst', handle: 'performance-analyst', role: 'Performance Analysis' },
+      { name: 'Creative Analyst', handle: 'creative-analyst', role: 'Creative Analysis' },
+      { name: 'Pixel Specialist', handle: 'pixel-specialist', role: 'Tracking & Pixels' },
+      { name: 'Scale Optimizer', handle: 'scale-optimizer', role: 'Scaling Systems' },
+      { name: 'Ads Analyst', handle: 'ads-analyst', role: 'Ad Analytics' },
+      { name: 'Fiscal', handle: 'fiscal', role: 'Budget & ROI' },
+    ]
+  },
+  {
+    id: 'brand-squad', name: 'Brand Squad', color: '#7a6b8a',
+    desc: '15 estrategistas de marca',
+    tasks: 9, workflows: 2,
+    agents: [
+      { name: 'Brand Chief', handle: 'brand-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'David Aaker', handle: 'david-aaker', role: 'Brand Equity' },
+      { name: 'Marty Neumeier', handle: 'marty-neumeier', role: 'Brand Gap' },
+      { name: 'Donald Miller', handle: 'donald-miller', role: 'StoryBrand' },
+      { name: 'Al Ries', handle: 'al-ries', role: 'Positioning' },
+      { name: 'Kevin Keller', handle: 'kevin-keller', role: 'Brand Management' },
+      { name: 'Jean-Noel Kapferer', handle: 'jean-noel-kapferer', role: 'Brand Identity Prism' },
+      { name: 'Byron Sharp', handle: 'byron-sharp', role: 'How Brands Grow' },
+      { name: 'Alina Wheeler', handle: 'alina-wheeler', role: 'Brand Identity Design' },
+      { name: 'Emily Heyward', handle: 'emily-heyward', role: 'Obsessed (DTC Brands)' },
+      { name: 'Denise Lee Yohn', handle: 'denise-yohn', role: 'Brand Leadership' },
+      { name: 'Miller Sticky Brand', handle: 'miller-sticky-brand', role: 'Sticky Branding' },
+      { name: 'Naming Strategist', handle: 'naming-strategist', role: 'Naming & Domains' },
+      { name: 'Archetype Consultant', handle: 'archetype-consultant', role: 'Brand Archetypes' },
+      { name: 'Domain Scout', handle: 'domain-scout', role: 'Domain Research' },
+    ]
+  },
+  {
+    id: 'cybersecurity', name: 'Cybersecurity', color: '#a05050',
+    desc: '15 agentes de ciberseguranca',
+    tasks: 9, workflows: 2,
+    agents: [
+      { name: 'Cyber Chief', handle: 'cyber-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Georgia Weidman', handle: 'georgia-weidman', role: 'Penetration Testing' },
+      { name: 'Peter Kim', handle: 'peter-kim', role: 'The Hacker Playbook' },
+      { name: 'Jim Manico', handle: 'jim-manico', role: 'Application Security' },
+      { name: 'Omar Santos', handle: 'omar-santos', role: 'Network Security' },
+      { name: 'Chris Sanders', handle: 'chris-sanders', role: 'Blue Team / Defense' },
+      { name: 'Marcus Carey', handle: 'marcus-carey', role: 'Threat Intelligence' },
+      { name: 'Command Generator', handle: 'command-generator', role: 'Command Crafting' },
+      { name: 'Cartographer', handle: 'cartographer', role: 'Network Mapping' },
+      { name: 'Fuzzer', handle: 'fuzzer', role: 'Fuzz Testing' },
+      { name: 'Rogue', handle: 'rogue', role: 'Social Engineering' },
+      { name: 'Ripper', handle: 'ripper', role: 'Exploitation' },
+      { name: 'Busterer', handle: 'busterer', role: 'Brute Force Analysis' },
+      { name: 'Dirber', handle: 'dirber', role: 'Directory Enumeration' },
+      { name: 'Shannon Runner', handle: 'shannon-runner', role: 'Crypto Analysis' },
+    ]
+  },
+  {
+    id: 'storytelling', name: 'Storytelling', color: '#7a8a3a',
+    desc: '12 mestres da narrativa',
+    tasks: 8, workflows: 2,
+    agents: [
+      { name: 'Story Chief', handle: 'story-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Joseph Campbell', handle: 'joseph-campbell', role: "Hero's Journey" },
+      { name: 'Dan Harmon', handle: 'dan-harmon', role: 'Story Circle' },
+      { name: 'Blake Snyder', handle: 'blake-snyder', role: 'Save the Cat' },
+      { name: 'Nancy Duarte', handle: 'nancy-duarte', role: 'Presentation Design' },
+      { name: 'Oren Klaff', handle: 'oren-klaff', role: 'Pitch Anything' },
+      { name: 'Shawn Coyne', handle: 'shawn-coyne', role: 'Story Grid' },
+      { name: 'Kindra Hall', handle: 'kindra-hall', role: 'Stories That Stick' },
+      { name: 'Matthew Dicks', handle: 'matthew-dicks', role: 'Storyworthy' },
+      { name: 'Keith Johnstone', handle: 'keith-johnstone', role: 'Improv & Status' },
+      { name: 'Marshall Ganz', handle: 'marshall-ganz', role: 'Public Narrative' },
+      { name: 'Park Howell', handle: 'park-howell', role: 'Business of Story' },
+    ]
+  },
+  {
+    id: 'advisory-board', name: 'Advisory Board', color: '#6a8fa0',
+    desc: '11 conselheiros estrategicos',
+    tasks: 7, workflows: 2,
+    agents: [
+      { name: 'Board Chair', handle: 'board-chair', role: 'Orquestrador do board', chief: true },
+      { name: 'Ray Dalio', handle: 'ray-dalio', role: 'Principles & Macro' },
+      { name: 'Charlie Munger', handle: 'charlie-munger', role: 'Mental Models' },
+      { name: 'Naval Ravikant', handle: 'naval-ravikant', role: 'Leverage & Judgment' },
+      { name: 'Peter Thiel', handle: 'peter-thiel', role: 'Zero to One' },
+      { name: 'Reid Hoffman', handle: 'reid-hoffman', role: 'Blitzscaling' },
+      { name: 'Simon Sinek', handle: 'simon-sinek', role: 'Start With Why' },
+      { name: 'Brene Brown', handle: 'brene-brown', role: 'Vulnerability & Leadership' },
+      { name: 'Patrick Lencioni', handle: 'patrick-lencioni', role: 'Team Dynamics' },
+      { name: 'Derek Sivers', handle: 'derek-sivers', role: 'Simplicity & Purpose' },
+      { name: 'Yvon Chouinard', handle: 'yvon-chouinard', role: 'Purpose-Driven Business' },
+    ]
+  },
+  {
+    id: 'design-squad', name: 'Design Squad', color: '#b06080',
+    desc: '8 especialistas em design',
+    tasks: 8, workflows: 2,
+    agents: [
+      { name: 'Design Chief', handle: 'design-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Brad Frost', handle: 'brad-frost', role: 'Atomic Design' },
+      { name: 'Dan Mall', handle: 'dan-mall', role: 'Design System Strategy' },
+      { name: 'Dave Malouf', handle: 'dave-malouf', role: 'DesignOps' },
+      { name: 'Design System Architect', handle: 'design-system-architect', role: 'System Architecture' },
+      { name: 'UX Designer', handle: 'ux-designer', role: 'User Experience' },
+      { name: 'UI Engineer', handle: 'ui-engineer', role: 'Interface Engineering' },
+      { name: 'Visual Generator', handle: 'visual-generator', role: 'Visual Assets' },
+    ]
+  },
+  {
+    id: 'data-squad', name: 'Data Squad', color: '#5a8a6a',
+    desc: '7 estrategistas data-driven',
+    tasks: 7, workflows: 2,
+    agents: [
+      { name: 'Data Chief', handle: 'data-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Avinash Kaushik', handle: 'avinash-kaushik', role: 'Web Analytics' },
+      { name: 'Sean Ellis', handle: 'sean-ellis', role: 'Growth Hacking' },
+      { name: 'Peter Fader', handle: 'peter-fader', role: 'Customer Lifetime Value' },
+      { name: 'David Spinks', handle: 'david-spinks', role: 'Community Building' },
+      { name: 'Nick Mehta', handle: 'nick-mehta', role: 'Customer Success' },
+      { name: 'Wes Kao', handle: 'wes-kao', role: 'Cohort-Based Courses' },
+    ]
+  },
+  {
+    id: 'movement', name: 'Movement Squad', color: '#c07a30',
+    desc: '7 construtores de movimentos',
+    tasks: 7, workflows: 1,
+    agents: [
+      { name: 'Movement Chief', handle: 'movement-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Movement Architect', handle: 'movement-architect', role: 'Movement Design' },
+      { name: 'Fenomenologo', handle: 'fenomenologo', role: 'Fenomenologia' },
+      { name: 'Identitario', handle: 'identitario', role: 'Identidade de Grupo' },
+      { name: 'Manifestador', handle: 'manifestador', role: 'Manifestos & Narrativa' },
+      { name: 'Estrategista de Ciclo', handle: 'estrategista-de-ciclo', role: 'Ciclos de Crescimento' },
+      { name: 'Analista de Impacto', handle: 'analista-de-impacto', role: 'Medicao de Impacto' },
+    ]
+  },
+  {
+    id: 'c-level-squad', name: 'C-Level Squad', color: '#7070a0',
+    desc: '6 executivos C-suite',
+    tasks: 7, workflows: 2,
+    agents: [
+      { name: 'Vision Chief', handle: 'vision-chief', role: 'CEO / Visao Estrategica', chief: true },
+      { name: 'COO Orchestrator', handle: 'coo-orchestrator', role: 'Operacoes' },
+      { name: 'CMO Architect', handle: 'cmo-architect', role: 'Marketing' },
+      { name: 'CTO Architect', handle: 'cto-architect', role: 'Tecnologia' },
+      { name: 'CIO Engineer', handle: 'cio-engineer', role: 'Informacao' },
+      { name: 'CAIO Architect', handle: 'caio-architect', role: 'AI Officer' },
+    ]
+  },
+  {
+    id: 'claude-code-mastery', name: 'Claude Code Mastery', color: '#8a7050',
+    desc: '8 especialistas em Claude Code',
+    tasks: 26, workflows: 3,
+    agents: [
+      { name: 'Claude Mastery Chief', handle: 'claude-mastery-chief', role: 'Orquestrador do squad', chief: true },
+      { name: 'Config Engineer', handle: 'config-engineer', role: 'Configuracao' },
+      { name: 'Hooks Architect', handle: 'hooks-architect', role: 'Hooks & Events' },
+      { name: 'MCP Integrator', handle: 'mcp-integrator', role: 'MCP Servers' },
+      { name: 'Project Integrator', handle: 'project-integrator', role: 'Project Setup' },
+      { name: 'Roadmap Sentinel', handle: 'roadmap-sentinel', role: 'Roadmap Tracking' },
+      { name: 'Skill Craftsman', handle: 'skill-craftsman', role: 'Custom Skills' },
+      { name: 'Swarm Orchestrator', handle: 'swarm-orchestrator', role: 'Multi-Agent Swarms' },
+    ]
+  },
+];
+
+const totalAgents = squads.reduce((s, q) => s + q.agents.length, 0);
+const totalTasks = squads.reduce((s, q) => s + q.tasks, 0);
+const totalWorkflows = squads.reduce((s, q) => s + q.workflows, 0);
+
+let activeSquad = null;
+let activeAgent = null;
+const logs = [];
+
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function addLog(tag, cls, text) {
+  const time = new Date().toTimeString().split(' ')[0];
+  logs.push({ time, tag, cls, text });
+  const el = document.getElementById('termLog');
+  el.innerHTML = logs.slice(-20).map(l =>
+    `<div class="log-line"><span class="log-time">${l.time}</span><span class="log-tag t-${l.cls}">[${l.tag}]</span><span class="log-msg">${l.text}</span></div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function renderSquads() {
+  document.getElementById('squadList').innerHTML = squads.map(s => `
+    <div class="squad-item ${activeSquad === s.id ? 'active' : ''}" onclick="selectSquad('${s.id}')">
+      <div class="squad-indicator" style="background:${s.color}"></div>
+      <div class="squad-info">
+        <div class="squad-item-name">${s.name}</div>
+        <div class="squad-item-desc">${s.desc}</div>
+      </div>
+      <span class="squad-item-count">${s.agents.length}</span>
+    </div>
+  `).join('');
+}
+
+function renderAgents(squadId, filter) {
+  const squad = squadId ? squads.find(s => s.id === squadId) : null;
+  let agents = squad
+    ? squad.agents.map(a => ({ ...a, squadId: squad.id, squadColor: squad.color, squadName: squad.name }))
+    : squads.flatMap(s => s.agents.map(a => ({ ...a, squadId: s.id, squadColor: s.color, squadName: s.name })));
+
+  if (filter) {
+    const q = filter.toLowerCase();
+    agents = agents.filter(a =>
+      a.name.toLowerCase().includes(q) ||
+      a.handle.toLowerCase().includes(q) ||
+      (a.role && a.role.toLowerCase().includes(q)) ||
+      a.squadName.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('gridTitle').textContent = squad ? squad.name : (filter ? 'Resultados' : 'Todos os Agentes');
+  document.getElementById('agentCount').textContent = agents.length;
+
+  if (!agents.length) {
+    document.getElementById('agentsGrid').innerHTML = '<div class="empty-state">Nenhum agente encontrado.</div>';
+    return;
+  }
+
+  document.getElementById('agentsGrid').innerHTML = agents.map(a => `
+    <div class="agent-card ${activeAgent === a.handle ? 'active' : ''}" onclick="selectAgent('${a.handle}','${a.squadId}')">
+      ${a.chief ? '<span class="agent-chief-tag">Chief</span>' : ''}
+      <div class="agent-card-top">
+        <div class="agent-photo" style="border-color:${a.squadColor}30">
+          <span class="initials">${getInitials(a.name)}</span>
+        </div>
+        <div>
+          <div class="agent-card-name">${a.name}</div>
+          <div class="agent-card-handle">@${a.handle}</div>
+        </div>
+      </div>
+      <div class="agent-card-role">${a.role}</div>
+    </div>
+  `).join('');
+}
+
+function selectSquad(id) {
+  activeSquad = activeSquad === id ? null : id;
+  document.getElementById('searchInput').value = '';
+  renderSquads();
+  renderAgents(activeSquad);
+  if (activeSquad) {
+    const s = squads.find(s => s.id === id);
+    addLog('SQUAD', 'sys', `${s.name} selecionado -- ${s.agents.length} agentes`);
+  }
+}
+
+function selectAgent(handle, squadId) {
+  const squad = squads.find(s => s.id === squadId);
+  const agent = squad.agents.find(a => a.handle === handle);
+  if (!agent) return;
+
+  activeAgent = handle;
+  document.getElementById('activeName').textContent = agent.name;
+  document.getElementById('activeHandle').textContent = `@${handle}  /  ${squad.name}`;
+  document.getElementById('activeInitials').textContent = getInitials(agent.name);
+  const status = document.getElementById('activeStatus');
+  status.textContent = 'Ativo';
+  status.className = 'active-status active';
+  document.getElementById('activeBar').classList.add('has-agent');
+  document.getElementById('promptInput').value = `@${handle} `;
+  document.getElementById('promptInput').focus();
+
+  addLog('AGENT', 'agent', `${agent.name} (@${handle}) ativado`);
+  renderAgents(activeSquad, document.getElementById('searchInput').value);
+  openDetail(agent, squad);
+}
+
+function openDetail(agent, squad) {
+  const p = document.getElementById('detailPanel');
+  p.innerHTML = `
+    <div class="detail-top">
+      <div class="detail-photo" style="border-color:${squad.color}40">
+        <span class="initials">${getInitials(agent.name)}</span>
+      </div>
+      <div class="detail-info">
+        <h2>${agent.name}</h2>
+        <div class="handle">@${agent.handle}</div>
+        <div class="squad-label">${squad.name}${agent.chief ? '  /  Orquestrador' : ''}</div>
+      </div>
+      <button class="detail-close" onclick="closeDetail()">&#10005;</button>
+    </div>
+    <div class="detail-sep"></div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-label">Especialidade</div>
+        <div class="detail-role-text">${agent.role}</div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">Ativar no Claude Code</div>
+        <div class="detail-cmd" onclick="copyCmd('@${agent.handle}')">
+          <code>@${agent.handle}</code>
+          <span class="cp">copiar</span>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">Comandos</div>
+        <div class="detail-cmd" onclick="copyCmd('@${agent.handle} *help')">
+          <code>@${agent.handle} *help</code>
+          <span class="cp">copiar</span>
+        </div>
+        <div class="detail-cmd" onclick="copyCmd('@${agent.handle} *task')">
+          <code>@${agent.handle} *task</code>
+          <span class="cp">copiar</span>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">Arquivo</div>
+        <div class="detail-cmd" onclick="copyCmd('squads/${squad.id}/agents/${agent.handle}.md')">
+          <code>squads/${squad.id}/agents/${agent.handle}.md</code>
+          <span class="cp">copiar</span>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-label">Squad</div>
+        <div class="detail-tags">
+          <span class="detail-tag">${squad.agents.length} agentes</span>
+          <span class="detail-tag">${squad.tasks} tasks</span>
+          <span class="detail-tag">${squad.workflows} workflows</span>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeDetail() {
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function copyCmd(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const t = document.getElementById('toast');
+    t.textContent = 'Copiado: ' + text;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+    addLog('OK', 'ok', 'Copiado: ' + text);
+  });
+}
+
+function sendPrompt() {
+  const input = document.getElementById('promptInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addLog('USER', 'user', text.substring(0, 80));
+  const rt = document.getElementById('responseText');
+  document.getElementById('responseAgent').textContent = activeAgent ? '@' + activeAgent : 'Parket Squads';
+  rt.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+
+  setTimeout(() => {
+    rt.innerHTML = `
+      <p style="margin-bottom:14px;color:var(--text2)">Abra o terminal e execute:</p>
+      <div class="cmd-box" style="margin-bottom:10px;background:var(--black)" onclick="copyCmd('cd ~/projetos/agentes && claude')">
+        <code style="color:#e0d9cf">cd ~/projetos/agentes && claude</code>
+        <span class="copy-label" style="opacity:1">copiar</span>
+      </div>
+      <p style="margin-bottom:8px;color:var(--text2)">Depois cole no Claude Code:</p>
+      <div class="cmd-box" style="background:var(--black)" onclick="copyCmd('${text.replace(/'/g,"\\'")}')">
+        <code style="color:var(--gold-light)">${text}</code>
+        <span class="copy-label" style="opacity:1">copiar</span>
+      </div>
+    `;
+    addLog('OK', 'ok', 'Comando preparado');
+  }, 600);
+
+  input.value = '';
+}
+
+// Search
+let st;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(st);
+  st = setTimeout(() => {
+    const q = e.target.value.trim();
+    if (q) { activeSquad = null; renderSquads(); }
+    renderAgents(activeSquad, q);
+  }, 200);
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+document.getElementById('promptInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendPrompt(); }
+});
+
+// Init
+renderSquads();
+renderAgents(null);
+addLog('SYS', 'sys', 'Parket Squads inicializado');
+addLog('SYS', 'sys', totalAgents + ' agentes em ' + squads.length + ' squads');
+addLog('INFO', 'info', 'Clique em um agente para ver detalhes');
+
+function animateNum(id, target) {
+  let c = 0;
+  const step = Math.max(1, Math.ceil(target / 30));
+  const iv = setInterval(() => {
+    c = Math.min(c + step, target);
+    document.getElementById(id).textContent = c;
+    if (c >= target) clearInterval(iv);
+  }, 25);
+}
+
+setTimeout(() => {
+  animateNum('s-squads', squads.length);
+  animateNum('s-agents', totalAgents);
+  animateNum('s-tasks', totalTasks);
+  animateNum('s-workflows', totalWorkflows);
+}, 300);
+
+// Clock not needed for minimal design
+</script>
+</body>
+</html>
