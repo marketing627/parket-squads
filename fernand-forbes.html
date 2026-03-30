@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FERNAND FORBES — Parket Editorial</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0907;
+    --bg2: #111009;
+    --bg3: #1a1812;
+    --surface: #1e1c14;
+    --surface2: #242219;
+    --border: rgba(210,190,130,0.12);
+    --border2: rgba(210,190,130,0.22);
+    --gold: #c9a84c;
+    --gold-light: #e2c47a;
+    --gold-dim: rgba(201,168,76,0.6);
+    --text: #f0ead8;
+    --text2: #a89e82;
+    --text3: #6b6351;
+    --accent: #8b5e2a;
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-sans: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border2);
+    padding: 2rem 2.5rem 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .masthead { display: flex; flex-direction: column; gap: 0.25rem; }
+
+  .masthead-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .masthead-title {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .masthead-sub {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 2rem 0;
+    background: var(--bg2);
+    overflow-y: auto;
+    max-height: calc(100vh - 90px);
+    position: sticky;
+    top: 0;
+  }
+
+  .sidebar-section {
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* FORM FIELDS */
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 0.35rem; }
+
+  .field select, .field input, .field textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    padding: 0.55rem 0.75rem;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  .field select:focus, .field input:focus, .field textarea:focus {
+    border-color: var(--gold-dim);
+  }
+  .field select option { background: #1e1c14; }
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+  /* PALETTES */
+  .territory-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .territory-btn {
+    text-align: left;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 11px;
+    padding: 0.5rem 0.75rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .territory-btn:hover { background: var(--surface); border-color: var(--gold-dim); color: var(--text); }
+  .territory-btn.active { background: var(--surface2); border-color: var(--gold); color: var(--gold-light); }
+
+  /* GENERATE BUTTON */
+  .btn-generate {
+    width: 100%;
+    background: var(--gold);
+    color: #0a0907;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-generate:hover { background: var(--gold-light); }
+  .btn-generate:disabled { background: var(--text3); cursor: not-allowed; color: var(--bg2); }
+
+  /* MAIN CONTENT */
+  .main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    max-height: calc(100vh - 90px);
+  }
+
+  /* WELCOME STATE */
+  .welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 3rem;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .welcome-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 0 auto;
+  }
+
+  .welcome-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .welcome-text {
+    font-size: 13px;
+    color: var(--text3);
+    max-width: 420px;
+    line-height: 1.8;
+  }
+
+  .welcome-features {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .feat {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .feat::before { content: ''; width: 4px; height: 4px; background: var(--gold-dim); border-radius: 50%; display: inline-block; }
+
+  /* OUTPUT AREA */
+  .output-area {
+    flex: 1;
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* LOADING */
+  .loading-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .loading-dots span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 1.2s ease-in-out infinite;
+    margin-right: 5px;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .loading-label { font-size: 11px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* OUTPUT SECTIONS */
+  .output-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .meta-date {
+    font-size: 11px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  /* ARTICLE OUTPUT */
+  .article-output {
+    font-family: var(--font-serif);
+  }
+
+  .section-header {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+    font-family: var(--font-sans);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header:first-child { margin-top: 0; }
+
+  .editorial-angle {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--font-sans);
+    font-style: italic;
+    padding: 1rem 1.5rem;
+    border-left: 2px solid var(--gold-dim);
+    background: var(--surface);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .titles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .title-item {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    color: var(--text);
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .title-item:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+  .title-item .num { font-size: 10px; color: var(--text3); font-family: var(--font-sans); margin-right: 0.5rem; }
+
+  .subtitle-item {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    line-height: 1.6;
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+
+  .article-body {
+    font-size: 15px;
+    line-height: 1.95;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .article-body h1, .article-body h2, .article-body h3 {
+    font-family: var(--font-serif);
+    color: var(--gold-light);
+    margin: 2rem 0 0.75rem;
+    font-weight: normal;
+  }
+
+  .article-body h1 { font-size: 1.8rem; }
+  .article-body h2 { font-size: 1.3rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  .article-body h3 { font-size: 1.1rem; color: var(--text2); }
+
+  .article-body blockquote {
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    background: var(--surface);
+    font-style: italic;
+    color: var(--text2);
+    font-size: 16px;
+  }
+
+  .article-body strong { color: var(--gold-light); font-weight: 500; }
+
+  .highlight-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 0.5rem 0;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text2);
+    line-height: 1.7;
+    position: relative;
+  }
+  .highlight-card::before {
+    content: '"';
+    font-size: 3rem;
+    color: var(--gold-dim);
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    line-height: 1;
+  }
+
+  .visual-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .visual-num { font-size: 11px; color: var(--gold-dim); min-width: 1.5rem; font-family: var(--font-sans); }
+  .visual-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* STREAMING TEXT */
+  .streaming-content {
+    white-space: pre-wrap;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.95;
+    color: var(--text);
+  }
+
+  .streaming-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--gold);
+    animation: blink 0.8s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 1px;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* ACTIONS BAR */
+  .actions-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.2rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-btn:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+
+  /* DIVIDER */
+  .ornament { text-align: center; color: var(--gold-dim); margin: 2rem 0; font-size: 14px; letter-spacing: 0.3em; }
+
+
+  /* TABS */
+  .tabs-bar {
+    display: flex;
+    border-bottom: 1px solid var(--border2);
+    background: var(--bg2);
+    padding: 0 2rem;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text3);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--text2); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+    .main { max-height: none; }
+    .output-area { padding: 1.5rem; }
+    .header { padding: 1.5rem; }
+    .masthead-title { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="masthead">
+    <span class="masthead-eyebrow">Parket Editorial Intelligence</span>
+    <h1 class="masthead-title">FERNAND FORBES</h1>
+    <span class="masthead-sub">Editor-Chefe · Materialidade & Arquitetura Premium</span>
+  </div>
+  <div class="header-meta">
+    Powered by Claude AI<br>
+    Parket · Est. 1974<br>
+    Brasil
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section" style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);border-radius:6px;padding:1rem 1.25rem;margin-bottom:0.5rem;">
+      <div class="sidebar-label" style="color:var(--gold);margin-bottom:0.5rem;">&#128273; API Key Anthropic</div>
+      <div class="field" style="margin-bottom:0.4rem;">
+        <input type="password" id="apiKey" placeholder="Cole aqui: sk-ant-api03-..." autocomplete="off" style="border-color:rgba(201,168,76,0.35);font-size:12px;" />
+      </div>
+      <div style="font-size:10px;color:var(--text3);line-height:1.5;">
+        Obrigatório para gerar mat&#233;rias. Sua chave fica s&#243; no browser e nunca &#233; salva.<br>
+        <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--gold-dim);text-decoration:underline;">Gerar chave no Anthropic Console &#8599;</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tipo de Peça</div>
+      <div class="field">
+        <select id="formato">
+          <option value="reportagem">Reportagem de Autoridade</option>
+          <option value="artigo">Artigo Analítico</option>
+          <option value="ensaio">Ensaio Editorial</option>
+          <option value="coluna">Coluna Assinada</option>
+          <option value="perfil">Perfil</option>
+          <option value="entrevista">Entrevista Editorial</option>
+          <option value="guia">Guia Sofisticado</option>
+          <option value="dossie">Dossiê Temático</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Público Principal</div>
+      <div class="field">
+        <select id="publico">
+          <option value="arquitetos">Arquitetos e Especificadores</option>
+          <option value="incorporadores">Incorporadores Premium</option>
+          <option value="clientes">Clientes Finais Ultra Premium</option>
+          <option value="mercado">Mercado e Investidores</option>
+          <option value="imprensa">Imprensa e Curadoria</option>
+          <option value="misto">Público Misto (todos os anteriores)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tamanho</div>
+      <div class="field">
+        <select id="tamanho">
+          <option value="800">Curto — ~800 palavras</option>
+          <option value="1200" selected>Médio — ~1.200 palavras</option>
+          <option value="1800">Longo — ~1.800 palavras</option>
+          <option value="2500">Extenso — ~2.500 palavras</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Papel da Parket</div>
+      <div class="field">
+        <select id="papel">
+          <option value="autoridade">Autoridade implícita e natural</option>
+          <option value="fonte">Fonte de critério e conhecimento</option>
+          <option value="protagonista">Protagonista da narrativa</option>
+          <option value="contraponto">Contraponto de excelência</option>
+          <option value="parceira">Parceira estratégica de projetos</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sofisticação do Tom</div>
+      <div class="field">
+        <select id="sofisticacao">
+          <option value="moderado">Moderado — acessível e elegante</option>
+          <option value="alto">Alto — analítico e preciso</option>
+          <option value="maximo" selected>Máximo — FERNAND FORBES pleno</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tema da Matéria</div>
+      <div class="field">
+        <textarea id="tema" placeholder="Ex: Por que permanência é o novo símbolo de luxo na arquitetura residencial brasileira..."></textarea>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Territórios Editoriais</div>
+      <div class="territory-grid" id="territories">
+        <button class="territory-btn" data-tema="O que realmente diferencia uma obra sofisticada de uma obra cara">Obra sofisticada vs. obra cara</button>
+        <button class="territory-btn" data-tema="Luxo silencioso: por que os melhores espaços raramente gritam">Luxo silencioso</button>
+        <button class="territory-btn" data-tema="O erro invisível que compromete casas de altíssimo padrão">O erro invisível do alto padrão</button>
+        <button class="territory-btn" data-tema="Madeira como linguagem arquitetônica, não como acabamento">Madeira como linguagem</button>
+        <button class="territory-btn" data-tema="O que arquitetos realmente procuram em um parceiro de execução">O parceiro ideal do arquiteto</button>
+        <button class="territory-btn" data-tema="Como materiais certos aumentam valor percebido de um imóvel">Materialidade e valor de imóvel</button>
+        <button class="territory-btn" data-tema="Por que permanência virou o novo símbolo de luxo contemporâneo">Permanência como novo luxo</button>
+        <button class="territory-btn" data-tema="A estética do envelhecimento: materiais que melhoram com o tempo">Estética do envelhecimento</button>
+        <button class="territory-btn" data-tema="A inteligência invisível por trás de uma paginação impecável">A inteligência da paginação</button>
+        <button class="territory-btn" data-tema="Quando a marcenaria deixa de ser complemento e vira arquitetura">Marcenaria como arquitetura</button>
+        <button class="territory-btn" data-tema="Por que boa execução vale mais do que excesso de material">Execução acima de tudo</button>
+        <button class="territory-btn" data-tema="O custo real de especificar mal um piso, um forro ou uma escada">O custo da má especificação</button>
+        <button class="territory-btn" data-tema="A nova sofisticação brasileira em madeira e interiores de alto padrão">Nova sofisticação brasileira</button>
+        <button class="territory-btn" data-tema="Como o ultra rico escolhe materiais sem cair em obviedade">Como o ultra rico escolhe</button>
+        <button class="territory-btn" data-tema="A relação entre textura, luz e percepção de valor em arquitetura">Textura, luz e valor percebido</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <button class="btn-generate" id="btnGenerate">Gerar Matéria Editorial</button>
+    </div>
+
+  </aside>
+
+  <!-- MAIN OUTPUT -->
+  <main class="main" id="mainContent">
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tabGerar" onclick="switchTab('gerar')">Gerar Mat&#233;ria</button>
+      <button class="tab-btn" id="tabIdeia" onclick="switchTab('ideia')">&#127908; Tenho uma Ideia</button>
+      <button class="tab-btn" id="tabRevisar" onclick="switchTab('revisar')">Revisar Mat&#233;ria</button>
+    </div>
+
+    <!-- TAB: GERAR -->
+    <div id="panelGerar">
+      <div class="welcome" id="welcomeState">
+        <div class="welcome-rule"></div>
+        <h2 class="welcome-title">A palavra que posiciona.</h2>
+        <p class="welcome-text">FERNAND FORBES &#233; o agente editorial da Parket. Selecione um territ&#243;rio ou escreva seu pr&#243;prio tema.</p>
+        <div class="welcome-rule"></div>
+        <div class="welcome-features">
+          <span class="feat">10 t&#237;tulos por mat&#233;ria</span>
+          <span class="feat">Estrutura editorial completa</span>
+          <span class="feat">Frases de destaque</span>
+          <span class="feat">Dire&#231;&#227;o visual</span>
+          <span class="feat">Adapta&#231;&#245;es de formato</span>
+        </div>
+      </div>
+      <div class="output-area" id="outputArea" style="display:none;"></div>
+    </div>
+
+    <!-- TAB: IDEIA -->
+    <div id="panelIdeia" style="display:none;">
+      <div class="output-area" style="display:flex;">
+
+        <!-- STEP 1: INPUT -->
+        <div id="ideiaStep1">
+          <div class="section-header" style="margin-top:0;">Qual &#233; a sua ideia?</div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:1.5rem;line-height:1.7;">
+            Fale ou escreva sobre o tema que voc&#234; tem em mente &#8212; pode ser uma frase solta, uma observa&#231;&#227;o, uma pergunta, um assunto. O FERNAND FORBES interpreta e devolve 3 &#226;ngulos editoriais para voc&#234; escolher.
+          </p>
+
+          <!-- AUDIO RECORDER -->
+          <div style="background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
+            <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+              <button id="btnRecord" onclick="toggleRecord()" style="display:flex;align-items:center;gap:0.6rem;background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:var(--font-sans);font-size:12px;letter-spacing:0.08em;padding:0.6rem 1.1rem;border-radius:4px;cursor:pointer;transition:all 0.2s;">
+                <span id="recIcon" style="width:10px;height:10px;border-radius:50%;background:var(--gold);display:inline-block;flex-shrink:0;"></span>
+                <span id="recLabel">Gravar &#225;udio</span>
+              </button>
+              <span id="recStatus" style="font-size:11px;color:var(--text3);letter-spacing:0.08em;"></span>
+              <span id="recTimer" style="font-size:12px;color:var(--gold);font-family:var(--font-sans);font-weight:500;min-width:3rem;"></span>
+            </div>
+            <div id="recTranscript" style="margin-top:1rem;font-size:13px;color:var(--text2);font-style:italic;line-height:1.7;min-height:0;display:none;"></div>
+          </div>
+
+          <!-- TEXT INPUT -->
+          <div class="field">
+            <label>Ou escreva livremente</label>
+            <textarea id="ideiaTexto" style="min-height:100px;" placeholder="Ex: quero falar sobre como a madeira muda a percep&#231;&#227;o de um ambiente, sobre decks em coberturas de luxo, sobre arquitetos que usam madeira como elemento principal..."></textarea>
+          </div>
+
+          <button class="btn-generate" id="btnGerarAngulos" onclick="gerarAngulos()" style="margin-top:0.5rem;">Ver 3 &#226;ngulos editoriais</button>
+        </div>
+
+        <!-- STEP 2: ANGULOS -->
+        <div id="ideiaStep2" style="display:none;margin-top:0;">
+          <div class="section-header" style="margin-top:0;">Escolha o &#226;ngulo editorial</div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:1.5rem;line-height:1.7;">O FERNAND FORBES interpretou sua ideia e criou 3 &#226;ngulos diferentes. Escolha o que mais ressoa com o que voc&#234; tinha em mente.</p>
+          <div id="angulosContainer" style="display:flex;flex-direction:column;gap:1rem;"></div>
+          <button class="action-btn" onclick="voltarStep1()" style="margin-top:1.5rem;">&#8592; Mudar ideia</button>
+        </div>
+
+        <!-- STEP 3: LOADING + OUTPUT -->
+        <div id="ideiaStep3" style="display:none;margin-top:0;">
+          <div id="ideiaOutput"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB: REVISAR -->
+    <div id="panelRevisar" style="display:none;">
+      <div class="output-area" style="display:flex;">
+        <div class="section-header" style="margin-top:0;">Revis&#227;o Editorial FERNAND FORBES</div>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:1.5rem;line-height:1.7;">Cole a mat&#233;ria de outro rep&#243;rter. O FERNAND FORBES ir&#225; revisar com olhar editorial da Parket: tom, posicionamento, ritmo, densidade e adequa&#231;&#227;o ao p&#250;blico premium.</p>
+        <div class="field">
+          <label>Rep&#243;rter / Autor</label>
+          <input type="text" id="revisorAutor" placeholder="Ex: Jo&#227;o Silva" />
+        </div>
+        <div class="field">
+          <label>Contexto (opcional)</label>
+          <input type="text" id="revisorContexto" placeholder="Ex: Blog da Parket, p&#250;blico arquitetos, tema madeira em fachadas" />
+        </div>
+        <div class="field">
+          <label>Texto completo</label>
+          <textarea id="revisorTexto" style="min-height:200px;" placeholder="Cole aqui o texto completo a ser revisado..."></textarea>
+        </div>
+        <div class="field">
+          <label>Tipo de revis&#227;o</label>
+          <select id="revisorTipo">
+            <option value="completa">Revis&#227;o completa &#8212; tom, estrutura, posicionamento e sugest&#245;es</option>
+            <option value="tom">Apenas tom e voz &#8212; alinhamento com FERNAND FORBES</option>
+            <option value="posicionamento">Posicionamento da Parket no texto</option>
+            <option value="reescrever">Reescrever no estilo FERNAND FORBES</option>
+          </select>
+        </div>
+        <button class="btn-generate" id="btnRevisar" style="margin-top:0.5rem;" onclick="revisarMateria()">Revisar com FERNAND FORBES</button>
+        <div id="revisorOutput" style="margin-top:2rem;"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `Você é FERNAND FORBES — editor-chefe fictício especializado em arquitetura, design, luxo inteligente, materialidade, mercado premium e construção de autoridade editorial para a Parket.
+
+DNA DA PARKET (use sempre como base):
+— Empresa brasileira com herança de mais de 50 anos no universo da madeira, fundada em 1974
+— Referência nacional em: pisos de madeira, forros ripados, decks, escadas, painéis, revestimentos, fachadas, portas mimetizadas e marcenaria fina
+— Atua no segmento de altíssimo padrão — arquitetos de repertório, incorporadores de luxo, clientes de grande exigência
+— Posicionamento premium, técnico, consultivo e sofisticado
+— Vantagem baseada em: repertório, critério, curadoria, profundidade técnica, execução, confiança e resultado
+— Forte presença em São Paulo e Brasília
+— A Parket não vende apenas madeira: entrega linguagem arquitetônica, matéria com inteligência, execução com padrão e permanência com valor
+
+TOM E VOZ:
+— Sofisticação editorial com inteligência estratégica
+— Elegância cultural com frieza analítica
+— Sarcasmo sutil, raro e refinado (nunca agressivo ou vulgar)
+— Leitor típico: arquiteto de alto repertório, incorporador de luxo, cliente ultra premium, leitores de Monocle, FT Weekend, Wallpaper, Architectural Digest, Forbes Life
+
+REGRAS INEGOCIÁVEIS:
+— Nunca escreva como propaganda ou anúncio
+— Nunca use clichês: "exclusivo", "único", "excelência", "inovação" sem evidência
+— Nunca force a Parket no texto — ela deve emergir como consequência natural
+— Nunca banalize luxo
+— Sempre sustente afirmações com raciocínio, contexto e detalhe
+— Sempre preserve tom editorial de revista séria
+— Sempre entregue densidade, ritmo e sofisticação
+— A Parket nunca deve parecer apenas fornecedora de madeira
+
+PALAVRAS PARA EXPLORAR: critério, permanência, matéria, linguagem, proporção, textura, precisão, execução, curadoria, patrimônio, atmosfera, envelhecimento, silêncio visual, densidade, ritmo, arquitetura séria, valor percebido, inteligência construtiva.
+
+FORMATO DE SAÍDA OBRIGATÓRIO — entregue SEMPRE nesta ordem com estes marcadores exatos:
+
+##ANGULO_EDITORIAL##
+[Ângulo editorial em 3-4 linhas]
+
+##IDEIA_CENTRAL##
+[Ideia central em 2-4 linhas]
+
+##TITULOS##
+1. [título]
+2. [título]
+3. [título]
+4. [título]
+5. [título]
+6. [título]
+7. [título]
+8. [título]
+9. [título]
+10. [título]
+
+##SUBTITULOS##
+1. [subtítulo]
+2. [subtítulo]
+3. [subtítulo]
+
+##ESTRUTURA##
+[Estrutura em blocos — liste os blocos com seus propósitos]
+
+##MATERIA##
+[Matéria completa com toda a profundidade solicitada]
+
+##DESTAQUES##
+[5-7 frases de destaque que podem virar aspas, chamadas ou posts]
+
+##DIRECAO_VISUAL##
+[3-5 sugestões de imagem, foto ou direção visual]
+
+##PARKET_NO_TEXTO##
+[Como e onde a Parket aparece estrategicamente na narrativa]
+
+##CTA##
+[CTA editorial discreto, se fizer sentido]`;
+
+const territories = document.querySelectorAll('.territory-btn');
+const temaField = document.getElementById('tema');
+const btnGenerate = document.getElementById('btnGenerate');
+const welcomeState = document.getElementById('welcomeState');
+const outputArea = document.getElementById('outputArea');
+
+territories.forEach(btn => {
+  btn.addEventListener('click', () => {
+    territories.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    temaField.value = btn.dataset.tema;
+  });
+});
+
+function parseAndRender(text) {
+  const sections = {};
+  const markers = ['ANGULO_EDITORIAL','IDEIA_CENTRAL','TITULOS','SUBTITULOS','ESTRUTURA','MATERIA','DESTAQUES','DIRECAO_VISUAL','PARKET_NO_TEXTO','CTA'];
+  
+  markers.forEach((m, i) => {
+    const start = text.indexOf(`##${m}##`);
+    if (start === -1) return;
+    const contentStart = start + m.length + 4;
+    const nextMarker = markers.slice(i+1).find(nm => text.indexOf(`##${nm}##`) > start);
+    const end = nextMarker ? text.indexOf(`##${nextMarker}##`) : text.length;
+    sections[m] = text.slice(contentStart, end).trim();
+  });
+
+  const now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const formato = document.getElementById('formato').options[document.getElementById('formato').selectedIndex].text;
+  const publico = document.getElementById('publico').options[document.getElementById('publico').selectedIndex].text;
+
+  let html = `
+    <div class="output-meta">
+      <span class="meta-tag">${formato}</span>
+      <span class="meta-tag">${publico}</span>
+      <span class="meta-tag">Parket · ${document.getElementById('papel').options[document.getElementById('papel').selectedIndex].text}</span>
+      <span class="meta-date">FERNAND FORBES · ${now}</span>
+    </div>
+  `;
+
+  if (sections.ANGULO_EDITORIAL) {
+    html += `<div class="section-header">Ângulo Editorial</div>`;
+    html += `<div class="editorial-angle">${sections.ANGULO_EDITORIAL}</div>`;
+  }
+
+  if (sections.IDEIA_CENTRAL) {
+    html += `<div class="section-header">Ideia Central</div>`;
+    html += `<div class="editorial-angle" style="font-style:normal;color:var(--text2);">${sections.IDEIA_CENTRAL}</div>`;
+  }
+
+  if (sections.TITULOS) {
+    html += `<div class="section-header">10 Opções de Título</div>`;
+    html += `<div class="titles-list">`;
+    const lines = sections.TITULOS.split('\n').filter(l => l.trim());
+    lines.forEach(line => {
+      const match = line.match(/^(\d+)\.\s+(.+)$/);
+      if (match) {
+        html += `<div class="title-item"><span class="num">${match[1]}.</span>${match[2]}</div>`;
+      }
+    });
+    html += `</div>`;
+  }
+
+  if (sections.SUBTITULOS) {
+    html += `<div class="section-header">3 Opções de Subtítulo</div>`;
+    const lines = sections.SUBTITULOS.split('\n').filter(l => l.trim());
+    lines.forEach(line => {
+      const match = line.match(/^(\d+)\.\s+(.+)$/);
+      if (match) {
+        html += `<div class="subtitle-item" style="margin-bottom:0.5rem;">${match[2]}</div>`;
+      }
+    });
+  }
+
+  if (sections.ESTRUTURA) {
+    html += `<div class="section-header">Estrutura em Blocos</div>`;
+    html += `<div style="background:var(--surface);padding:1.25rem 1.5rem;border-radius:4px;border:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;">${sections.ESTRUTURA}</div>`;
+  }
+
+  html += `<div class="ornament">— · —</div>`;
+
+  if (sections.MATERIA) {
+    html += `<div class="section-header">Matéria Completa</div>`;
+    let body = sections.MATERIA
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^#{3}\s+(.+)$/gm, '<h3>$1</h3>')
+      .replace(/^#{2}\s+(.+)$/gm, '<h2>$1</h2>')
+      .replace(/^#{1}\s+(.+)$/gm, '<h1>$1</h1>')
+      .replace(/^>\s+(.+)$/gm, '<blockquote>$1</blockquote>');
+    html += `<div class="article-body" style="white-space:pre-wrap;">${body}</div>`;
+  }
+
+  html += `<div class="ornament">— · —</div>`;
+
+  if (sections.DESTAQUES) {
+    html += `<div class="section-header">Frases de Destaque</div>`;
+    const lines = sections.DESTAQUES.split('\n').filter(l => l.trim());
+    lines.forEach(line => {
+      const clean = line.replace(/^[-•*\d.]\s+/, '').replace(/^[""](.+)[""]$/, '$1');
+      if (clean.length > 10) {
+        html += `<div class="highlight-card" style="margin-bottom:0.75rem;">${clean}</div>`;
+      }
+    });
+  }
+
+  if (sections.DIRECAO_VISUAL) {
+    html += `<div class="section-header">Direção Visual</div>`;
+    const lines = sections.DIRECAO_VISUAL.split('\n').filter(l => l.trim());
+    lines.forEach((line, i) => {
+      const clean = line.replace(/^[-•*\d.]\s+/, '');
+      if (clean.length > 5) {
+        html += `<div class="visual-item"><span class="visual-num">0${i+1}</span><span class="visual-text">${clean}</span></div>`;
+      }
+    });
+  }
+
+  if (sections.PARKET_NO_TEXTO) {
+    html += `<div class="section-header">A Parket na Narrativa</div>`;
+    html += `<div style="font-size:13px;color:var(--text2);line-height:1.8;padding:1rem 1.5rem;background:var(--surface);border-radius:4px;border:1px solid var(--border);white-space:pre-wrap;">${sections.PARKET_NO_TEXTO}</div>`;
+  }
+
+  if (sections.CTA && sections.CTA.trim().length > 10) {
+    html += `<div class="section-header">CTA Editorial</div>`;
+    html += `<div class="editorial-angle" style="border-left-color:var(--gold);font-style:normal;">${sections.CTA}</div>`;
+  }
+
+  html += `
+    <div class="actions-bar">
+      <button class="action-btn" onclick="copyText()">Copiar Matéria</button>
+      <button class="action-btn" onclick="generateLinkedin()">Versão LinkedIn</button>
+      <button class="action-btn" onclick="generateNewsletter()">Versão Newsletter</button>
+      <button class="action-btn" onclick="generateInstagram()">Versão Instagram</button>
+      <button class="action-btn" onclick="clearOutput()">Nova Matéria</button>
+    </div>
+  `;
+
+  return html;
+}
+
+let currentFullText = '';
+
+async function generateContent() {
+  const tema = temaField.value.trim();
+  if (!tema) { alert('Por favor, selecione ou escreva um tema.'); return; }
+
+  btnGenerate.disabled = true;
+  welcomeState.style.display = 'none';
+  outputArea.style.display = 'flex';
+  outputArea.innerHTML = `
+    <div class="loading-bar">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <span class="loading-label">FERNAND FORBES está compondo...</span>
+    </div>
+    <div id="streamContainer" class="streaming-content"><span class="streaming-cursor"></span></div>
+  `;
+
+  const formato = document.getElementById('formato').value;
+  const publico = document.getElementById('publico').value;
+  const tamanho = document.getElementById('tamanho').value;
+  const papel = document.getElementById('papel').value;
+  const sofisticacao = document.getElementById('sofisticacao').value;
+
+  const userPrompt = `Tema: ${tema}
+
+Formato: ${formato}
+Público principal: ${publico}
+Tamanho: ~${tamanho} palavras na matéria completa
+Papel da Parket: ${papel}
+Grau de sofisticação: ${sofisticacao}
+Objetivo estratégico: posicionar a Parket como referência premium absoluta, gerar autoridade e desejo qualificado
+
+Entregue no formato completo especificado, com todos os marcadores de seção.`;
+
+  const streamContainer = document.getElementById('streamContainer');
+  let accumulated = '';
+
+  try {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    if (!apiKey) {
+      outputArea.innerHTML = '<div style="padding:2rem;color:var(--gold);font-size:13px;">Insira sua API Key da Anthropic no campo acima para continuar.</div>';
+      btnGenerate.disabled = false;
+      return;
+    }
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        stream: true,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || 'Erro ' + response.status + ': verifique sua API Key.');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+      
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              accumulated += parsed.delta.text;
+              streamContainer.innerHTML = escapeHtml(accumulated.slice(-800)) + '<span class="streaming-cursor"></span>';
+            }
+          } catch(e) {}
+        }
+      }
+    }
+
+    currentFullText = accumulated;
+    outputArea.innerHTML = parseAndRender(accumulated);
+
+  } catch(err) {
+    outputArea.innerHTML = `<div style="color:var(--gold);padding:2rem;font-size:13px;">Erro na geração: ${err.message}. Verifique a conexão com a API da Anthropic.</div>`;
+  }
+
+  btnGenerate.disabled = false;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyText() {
+  const materia = currentFullText;
+  navigator.clipboard.writeText(materia).then(() => {
+    const btn = event.target;
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar Matéria', 2000);
+  });
+}
+
+function clearOutput() {
+  outputArea.style.display = 'none';
+  outputArea.innerHTML = '';
+  welcomeState.style.display = 'flex';
+  currentFullText = '';
+  territories.forEach(b => b.classList.remove('active'));
+  temaField.value = '';
+}
+
+async function generateVariant(tipo) {
+  if (!currentFullText) return;
+  
+  const variantMap = {
+    linkedin: `A partir desta matéria da Parket, crie uma versão para LinkedIn com 150-200 palavras. Tom profissional, sofisticado, com 2-3 parágrafos e um gancho forte. Sem hashtags em excesso. Apenas 2-3 hashtags relevantes ao final. Preserve a voz do FERNAND FORBES:\n\n${currentFullText.slice(0, 2000)}`,
+    newsletter: `A partir desta matéria da Parket, crie uma versão para newsletter com 100-150 palavras. Inclua: linha de assunto de email, subtítulo breve, resumo do artigo e CTA para leitura completa. Tom editorial, elegante:\n\n${currentFullText.slice(0, 2000)}`,
+    instagram: `A partir desta matéria da Parket, crie uma legenda para Instagram com 80-120 palavras. Tom sofisticado e visual. Com quebra de linha para respiração. 3-4 hashtags relevantes ao final. Nada publicitário:\n\n${currentFullText.slice(0, 2000)}`
+  };
+
+  const prompt = variantMap[tipo];
+  outputArea.innerHTML += `<div id="variantLoading" style="border-top:1px solid var(--border);margin-top:2rem;padding-top:2rem;"><div class="loading-bar"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-label">Gerando versão ${tipo}...</span></div><div id="variantContent" class="streaming-content"></div></div>`;
+  
+  try {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        stream: true,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let variantText = '';
+    const variantEl = document.getElementById('variantContent');
+    const loadingEl = document.getElementById('variantLoading');
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              variantText += parsed.delta.text;
+              variantEl.textContent = variantText;
+            }
+          } catch(e) {}
+        }
+      }
+    }
+
+    const sectionLabel = tipo === 'linkedin' ? 'LinkedIn' : tipo === 'newsletter' ? 'Newsletter' : 'Instagram';
+    loadingEl.innerHTML = `
+      <div class="section-header" style="margin-top:2rem;">Versão ${sectionLabel}</div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:1.5rem;font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;">${variantText}</div>
+    `;
+  } catch(err) {
+    document.getElementById('variantLoading').innerHTML = `<p style="color:var(--gold);font-size:13px;">Erro: ${err.message}</p>`;
+  }
+}
+
+function generateLinkedin() { generateVariant('linkedin'); }
+function generateNewsletter() { generateVariant('newsletter'); }
+function generateInstagram() { generateVariant('instagram'); }
+
+
+function switchTab(tab) {
+  ['gerar','ideia','revisar'].forEach(t => {
+    const panel = document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (panel) panel.style.display = t === tab ? 'block' : 'none';
+    const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+}
+
+async function revisarMateria() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const texto = document.getElementById('revisorTexto').value.trim();
+  const autor = document.getElementById('revisorAutor').value.trim();
+  const contexto = document.getElementById('revisorContexto').value.trim();
+  const tipo = document.getElementById('revisorTipo').value;
+
+  if (!apiKey) { alert('Insira sua API Key da Anthropic.'); return; }
+  if (!texto) { alert('Cole o texto a ser revisado.'); return; }
+
+  const tipoMap = {
+    completa: 'Faça uma revisão editorial completa: avalie tom, voz, posicionamento da Parket, ritmo, estrutura, densidade e adequação ao público premium. Aponte o que está bom, o que precisa melhorar e dê sugestões concretas de reescrita para os trechos mais fracos.',
+    tom: 'Avalie exclusivamente o tom e a voz do texto. Está alinhado com o estilo FERNAND FORBES? É sofisticado o suficiente? Usa clichês? Tem ritmo editorial? Dê um parecer direto e sugestões.',
+    posicionamento: 'Avalie como a Parket aparece (ou deveria aparecer) neste texto. O posicionamento está adequado ao nível premium? A empresa parece autoridade ou fornecedora comum? Dê orientações precisas.',
+    reescrever: 'Reescreva este texto integralmente no estilo FERNAND FORBES — com toda a sofisticação, densidade, ritmo e posicionamento editorial da Parket. Preserve a essência do conteúdo original.'
+  };
+
+  const revisorPrompt = `Você está em modo de REVISÃO EDITORIAL.
+Autor: ${autor || 'Não informado'}
+Contexto: ${contexto || 'Matéria para a Parket'}
+Tipo de revisão: ${tipoMap[tipo]}
+
+TEXTO PARA REVISAR:
+---
+${texto}
+---
+
+Entregue sua revisão de forma estruturada, clara e com o mesmo nível de exigência editorial do FERNAND FORBES.`;
+
+  const btnR = document.getElementById('btnRevisar');
+  btnR.disabled = true;
+  const out = document.getElementById('revisorOutput');
+  out.innerHTML = '<div class="loading-bar"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-label">Revisando...</span></div><div id="revisorStream" class="streaming-content"></div>';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        stream: true,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: revisorPrompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || 'Erro ' + response.status);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let reviewText = '';
+    const streamEl = document.getElementById('revisorStream');
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      for (const line of chunk.split('\n')) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              reviewText += parsed.delta.text;
+              streamEl.textContent = reviewText;
+            }
+          } catch(e) {}
+        }
+      }
+    }
+
+    const tipoLabel = { completa: 'Revisão Completa', tom: 'Análise de Tom', posicionamento: 'Análise de Posicionamento', reescrever: 'Reescrita FERNAND FORBES' }[tipo];
+    out.innerHTML = `
+      <div class="section-header" style="margin-top:0;">${tipoLabel} — ${autor || 'Texto analisado'}</div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:1.5rem;font-size:14px;color:var(--text2);line-height:1.85;white-space:pre-wrap;font-family:var(--font-serif);">${reviewText}</div>
+      <div class="actions-bar">
+        <button class="action-btn" onclick="navigator.clipboard.writeText(document.querySelector('#revisorOutput div[style]').textContent)">Copiar Revisão</button>
+        <button class="action-btn" onclick="document.getElementById('revisorOutput').innerHTML='';document.getElementById('revisorTexto').value='';">Limpar</button>
+      </div>
+    `;
+  } catch(err) {
+    out.innerHTML = '<p style="color:var(--gold);font-size:13px;padding:1rem 0;">Erro: ' + err.message + '</p>';
+  }
+
+  btnR.disabled = false;
+}
+
+
+// ── IDEIA TAB: AUDIO ────────────────────────────────────────────────
+let mediaRecorder = null;
+let recognition = null;
+let isRecording = false;
+let recInterval = null;
+let recSeconds = 0;
+let transcriptAccum = '';
+
+function toggleRecord() {
+  if (isRecording) stopRecord();
+  else startRecord();
+}
+
+function startRecord() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert('Seu browser não suporta gravação de áudio. Use Chrome ou Edge e tente novamente.');
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = 'pt-BR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) transcriptAccum += t + ' ';
+      else interim = t;
+    }
+    const el = document.getElementById('recTranscript');
+    el.style.display = 'block';
+    el.textContent = transcriptAccum + interim;
+    document.getElementById('ideiaTexto').value = transcriptAccum + interim;
+  };
+
+  recognition.onerror = (e) => {
+    stopRecord();
+    if (e.error !== 'aborted') document.getElementById('recStatus').textContent = 'Erro: ' + e.error;
+  };
+
+  recognition.onend = () => { if (isRecording) recognition.start(); };
+
+  recognition.start();
+  isRecording = true;
+  recSeconds = 0;
+
+  const btn = document.getElementById('btnRecord');
+  const icon = document.getElementById('recIcon');
+  icon.style.background = '#e24b4a';
+  icon.style.animation = 'pulse-rec 1s ease-in-out infinite';
+  document.getElementById('recLabel').textContent = 'Parar gravação';
+  document.getElementById('recStatus').textContent = 'Gravando...';
+
+  recInterval = setInterval(() => {
+    recSeconds++;
+    const m = Math.floor(recSeconds / 60).toString().padStart(2, '0');
+    const s = (recSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('recTimer').textContent = m + ':' + s;
+  }, 1000);
+
+  if (!document.getElementById('recPulseStyle')) {
+    const st = document.createElement('style');
+    st.id = 'recPulseStyle';
+    st.textContent = '@keyframes pulse-rec { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }';
+    document.head.appendChild(st);
+  }
+}
+
+function stopRecord() {
+  if (recognition) { recognition.onend = null; recognition.stop(); recognition = null; }
+  isRecording = false;
+  clearInterval(recInterval);
+  document.getElementById('recIcon').style.background = 'var(--gold)';
+  document.getElementById('recIcon').style.animation = '';
+  document.getElementById('recLabel').textContent = 'Gravar áudio';
+  document.getElementById('recStatus').textContent = transcriptAccum ? 'Transcrição concluída.' : '';
+  document.getElementById('recTimer').textContent = '';
+}
+
+// ── IDEIA TAB: GERAR ÂNGULOS ─────────────────────────────────────────
+async function gerarAngulos() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const texto = document.getElementById('ideiaTexto').value.trim();
+  if (!apiKey) { alert('Insira sua API Key da Anthropic no campo da sidebar.'); return; }
+  if (!texto) { alert('Escreva ou grave sua ideia antes de continuar.'); return; }
+
+  const btn = document.getElementById('btnGerarAngulos');
+  btn.disabled = true;
+  btn.textContent = 'Interpretando...';
+
+  const prompt = `O usuário tem uma ideia vaga de pauta para a Parket. Interprete a ideia e crie EXATAMENTE 3 ângulos editoriais distintos — não mais, não menos.
+
+IDEIA DO USUÁRIO: "${texto}"
+
+Para cada ângulo entregue EXATAMENTE neste formato JSON e nada mais:
+
+{
+  "angulos": [
+    {
+      "numero": 1,
+      "titulo": "Título editorial forte (como uma matéria de revista)",
+      "tese": "Em 2 frases: qual é o argumento central deste ângulo?",
+      "gancho": "Em 1 frase: por que um leitor sofisticado deveria se importar?",
+      "formato": "Reportagem|Ensaio|Coluna|Artigo Analítico|Perfil"
+    },
+    { "numero": 2, ... },
+    { "numero": 3, ... }
+  ]
+}
+
+Cada ângulo deve ser genuinamente diferente: um pode ser mais técnico, outro mais cultural, outro mais estratégico/mercado.
+Responda SOMENTE com o JSON válido. Zero texto fora do JSON.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error?.message || 'Erro ' + res.status);
+    }
+
+    const data = await res.json();
+    const raw = data.content.map(b => b.text || '').join('').trim();
+    const clean = raw.replace(/^```json\s*/,'').replace(/\s*```$/,'').trim();
+    const parsed = JSON.parse(clean);
+
+    renderAngulos(parsed.angulos, texto);
+  } catch(err) {
+    alert('Erro ao gerar ângulos: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Ver 3 ângulos editoriais';
+  }
+}
+
+function renderAngulos(angulos, ideiaOriginal) {
+  const container = document.getElementById('angulosContainer');
+  container.innerHTML = '';
+
+  angulos.forEach((a, i) => {
+    const colors = ['var(--gold)', '#7aa', '#a87'];
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:1.5rem;cursor:pointer;transition:all 0.2s;';
+    card.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:1rem;">
+        <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);font-weight:600;flex-shrink:0;">${a.numero}</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);line-height:1.4;margin-bottom:0.6rem;">${a.titulo}</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:0.5rem;">${a.tese}</div>
+          <div style="font-size:11px;color:var(--text3);font-style:italic;line-height:1.6;margin-bottom:0.75rem;">${a.gancho}</div>
+          <span style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);background:rgba(201,168,76,0.08);padding:0.25rem 0.6rem;border-radius:2px;border:1px solid rgba(201,168,76,0.15);">${a.formato}</span>
+        </div>
+        <div style="font-size:20px;color:var(--text3);align-self:center;">›</div>
+      </div>
+    `;
+    card.addEventListener('mouseenter', () => { card.style.borderColor = 'var(--gold-dim)'; card.style.background = 'var(--surface2)'; });
+    card.addEventListener('mouseleave', () => { card.style.borderColor = 'var(--border2)'; card.style.background = 'var(--surface)'; });
+    card.addEventListener('click', () => gerarMateriaDeAngulo(a, ideiaOriginal));
+    container.appendChild(card);
+  });
+
+  document.getElementById('ideiaStep1').style.display = 'none';
+  document.getElementById('ideiaStep2').style.display = 'block';
+
+  const btn = document.getElementById('btnGerarAngulos');
+  btn.disabled = false;
+  btn.textContent = 'Ver 3 ângulos editoriais';
+}
+
+function voltarStep1() {
+  document.getElementById('ideiaStep1').style.display = 'block';
+  document.getElementById('ideiaStep2').style.display = 'none';
+  document.getElementById('ideiaStep3').style.display = 'none';
+  transcriptAccum = '';
+}
+
+async function gerarMateriaDeAngulo(angulo, ideiaOriginal) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+
+  document.getElementById('ideiaStep2').style.display = 'none';
+  document.getElementById('ideiaStep3').style.display = 'block';
+
+  const out = document.getElementById('ideiaOutput');
+  out.innerHTML = `
+    <div class="loading-bar" style="margin-bottom:1rem;">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <span class="loading-label">Compondo matéria — ângulo ${angulo.numero}</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+      <div style="font-size:10px;color:var(--gold-dim);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.4rem;">Ângulo escolhido</div>
+      <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);line-height:1.4;">${angulo.titulo}</div>
+    </div>
+    <div id="ideiaStream" class="streaming-content"><span class="streaming-cursor"></span></div>
+  `;
+
+  const userPrompt = `Ideia original do usuário: "${ideiaOriginal}"
+
+Ângulo editorial escolhido:
+— Título: ${angulo.titulo}
+— Tese: ${angulo.tese}
+— Gancho: ${angulo.gancho}
+— Formato: ${angulo.formato}
+
+Gere a matéria completa com este ângulo. Tamanho: ~1.200 palavras.
+Entregue no formato completo com todos os marcadores de seção (##ANGULO_EDITORIAL##, ##IDEIA_CENTRAL##, ##TITULOS##, ##SUBTITULOS##, ##ESTRUTURA##, ##MATERIA##, ##DESTAQUES##, ##DIRECAO_VISUAL##, ##PARKET_NO_TEXTO##, ##CTA##).`;
+
+  let accumulated = '';
+  const streamEl = document.getElementById('ideiaStream');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        stream: true,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const e = await response.json().catch(() => ({}));
+      throw new Error(e.error?.message || 'Erro ' + response.status);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      for (const line of chunk.split('\n')) {
+        if (line.startsWith('data: ')) {
+          const d = line.slice(6).trim();
+          if (d === '[DONE]') continue;
+          try {
+            const p = JSON.parse(d);
+            if (p.type === 'content_block_delta' && p.delta?.text) {
+              accumulated += p.delta.text;
+              streamEl.innerHTML = escapeHtml(accumulated.slice(-1000)) + '<span class="streaming-cursor"></span>';
+            }
+          } catch(e) {}
+        }
+      }
+    }
+
+    currentFullText = accumulated;
+    out.innerHTML = parseAndRender(accumulated) + `
+      <div class="actions-bar" style="margin-top:1.5rem;">
+        <button class="action-btn" onclick="voltarStep1()">&#8592; Nova ideia</button>
+      </div>
+    `;
+
+  } catch(err) {
+    out.innerHTML = `<p style="color:var(--gold);padding:1rem 0;font-size:13px;">Erro: ${err.message}</p>
+      <button class="action-btn" onclick="voltarStep1()">← Tentar novamente</button>`;
+  }
+}
+
+btnGenerate.addEventListener('click', generateContent);
+</script>
+</body>
+</html>
