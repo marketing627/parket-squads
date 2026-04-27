@@ -529,7 +529,7 @@
     <span class="masthead-sub">Editor-Chefe · Materialidade & Arquitetura Premium</span>
   </div>
   <div class="header-meta">
-    Powered by Claude AI<br>
+    Powered by Gemini<br>
     Parket · Est. 1974<br>
     Brasil
   </div>
@@ -540,13 +540,13 @@
   <aside class="sidebar">
 
     <div class="sidebar-section" style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);border-radius:6px;padding:1rem 1.25rem;margin-bottom:0.5rem;">
-      <div class="sidebar-label" style="color:var(--gold);margin-bottom:0.5rem;">&#128273; API Key Anthropic</div>
+      <div class="sidebar-label" style="color:var(--gold);margin-bottom:0.5rem;">&#128273; API Key Gemini</div>
       <div class="field" style="margin-bottom:0.4rem;">
-        <input type="password" id="apiKey" placeholder="Cole aqui: sk-ant-api03-..." autocomplete="off" style="border-color:rgba(201,168,76,0.35);font-size:12px;" />
+        <input type="password" id="apiKey" placeholder="Cole aqui: AIza..." autocomplete="off" style="border-color:rgba(201,168,76,0.35);font-size:12px;" />
       </div>
       <div style="font-size:10px;color:var(--text3);line-height:1.5;">
         Obrigatório para gerar mat&#233;rias. Sua chave fica s&#243; no browser e nunca &#233; salva.<br>
-        <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--gold-dim);text-decoration:underline;">Gerar chave no Anthropic Console &#8599;</a>
+        <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--gold-dim);text-decoration:underline;">Gerar chave no Google AI Studio &#8599;</a>
       </div>
     </div>
 
@@ -1013,24 +1013,19 @@ Entregue no formato completo especificado, com todos os marcadores de seção.`;
   try {
     const apiKey = document.getElementById('apiKey').value.trim();
     if (!apiKey) {
-      outputArea.innerHTML = '<div style="padding:2rem;color:var(--gold);font-size:13px;">Insira sua API Key da Anthropic no campo acima para continuar.</div>';
+      outputArea.innerHTML = '<div style="padding:2rem;color:var(--gold);font-size:13px;">Insira sua API Key do Gemini no campo acima para continuar.</div>';
       btnGenerate.disabled = false;
       return;
     }
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        stream: true,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt }]
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        generationConfig: { maxOutputTokens: 4000 }
       })
     });
     if (!response.ok) {
@@ -1051,11 +1046,12 @@ Entregue no formato completo especificado, com todos os marcadores de seção.`;
       for (const line of lines) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6).trim();
-          if (data === '[DONE]') continue;
+          if (!data || data === '[DONE]') continue;
           try {
             const parsed = JSON.parse(data);
-            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-              accumulated += parsed.delta.text;
+            const text = parsed.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+            if (text) {
+              accumulated += text;
               streamContainer.innerHTML = escapeHtml(accumulated.slice(-800)) + '<span class="streaming-cursor"></span>';
             }
           } catch(e) {}
@@ -1067,7 +1063,7 @@ Entregue no formato completo especificado, com todos os marcadores de seção.`;
     outputArea.innerHTML = parseAndRender(accumulated);
 
   } catch(err) {
-    outputArea.innerHTML = `<div style="color:var(--gold);padding:2rem;font-size:13px;">Erro na geração: ${err.message}. Verifique a conexão com a API da Anthropic.</div>`;
+    outputArea.innerHTML = `<div style="color:var(--gold);padding:2rem;font-size:13px;">Erro na geração: ${err.message}. Verifique a conexão com a API do Gemini.</div>`;
   }
 
   btnGenerate.disabled = false;
@@ -1109,20 +1105,15 @@ async function generateVariant(tipo) {
   
   try {
     const apiKey = document.getElementById('apiKey').value.trim();
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        stream: true,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: prompt }]
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 1000 }
       })
     });
 
@@ -1140,11 +1131,12 @@ async function generateVariant(tipo) {
       for (const line of lines) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6).trim();
-          if (data === '[DONE]') continue;
+          if (!data || data === '[DONE]') continue;
           try {
             const parsed = JSON.parse(data);
-            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-              variantText += parsed.delta.text;
+            const text = parsed.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+            if (text) {
+              variantText += text;
               variantEl.textContent = variantText;
             }
           } catch(e) {}
@@ -1183,7 +1175,7 @@ async function revisarMateria() {
   const contexto = document.getElementById('revisorContexto').value.trim();
   const tipo = document.getElementById('revisorTipo').value;
 
-  if (!apiKey) { alert('Insira sua API Key da Anthropic.'); return; }
+  if (!apiKey) { alert('Insira sua API Key do Gemini.'); return; }
   if (!texto) { alert('Cole o texto a ser revisado.'); return; }
 
   const tipoMap = {
@@ -1211,20 +1203,15 @@ Entregue sua revisão de forma estruturada, clara e com o mesmo nível de exigê
   out.innerHTML = '<div class="loading-bar"><div class="loading-dots"><span></span><span></span><span></span></div><span class="loading-label">Revisando...</span></div><div id="revisorStream" class="streaming-content"></div>';
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 3000,
-        stream: true,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: revisorPrompt }]
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: revisorPrompt }] }],
+        generationConfig: { maxOutputTokens: 3000 }
       })
     });
 
@@ -1245,11 +1232,12 @@ Entregue sua revisão de forma estruturada, clara e com o mesmo nível de exigê
       for (const line of chunk.split('\n')) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6).trim();
-          if (data === '[DONE]') continue;
+          if (!data || data === '[DONE]') continue;
           try {
             const parsed = JSON.parse(data);
-            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-              reviewText += parsed.delta.text;
+            const text = parsed.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+            if (text) {
+              reviewText += text;
               streamEl.textContent = reviewText;
             }
           } catch(e) {}
@@ -1360,7 +1348,7 @@ function stopRecord() {
 async function gerarAngulos() {
   const apiKey = document.getElementById('apiKey').value.trim();
   const texto = document.getElementById('ideiaTexto').value.trim();
-  if (!apiKey) { alert('Insira sua API Key da Anthropic no campo da sidebar.'); return; }
+  if (!apiKey) { alert('Insira sua API Key do Gemini no campo da sidebar.'); return; }
   if (!texto) { alert('Escreva ou grave sua ideia antes de continuar.'); return; }
 
   const btn = document.getElementById('btnGerarAngulos');
@@ -1391,19 +1379,15 @@ Cada ângulo deve ser genuinamente diferente: um pode ser mais técnico, outro m
 Responda SOMENTE com o JSON válido. Zero texto fora do JSON.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1200,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: prompt }]
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 8000, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 } }
       })
     });
 
@@ -1413,7 +1397,7 @@ Responda SOMENTE com o JSON válido. Zero texto fora do JSON.`;
     }
 
     const data = await res.json();
-    const raw = data.content.map(b => b.text || '').join('').trim();
+    const raw = (data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '').trim();
     const clean = raw.replace(/^```json\s*/,'').replace(/\s*```$/,'').trim();
     const parsed = JSON.parse(clean);
 
@@ -1500,20 +1484,15 @@ Entregue no formato completo com todos os marcadores de seção (##ANGULO_EDITOR
   const streamEl = document.getElementById('ideiaStream');
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        stream: true,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt }]
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        generationConfig: { maxOutputTokens: 4000 }
       })
     });
 
@@ -1532,11 +1511,12 @@ Entregue no formato completo com todos os marcadores de seção (##ANGULO_EDITOR
       for (const line of chunk.split('\n')) {
         if (line.startsWith('data: ')) {
           const d = line.slice(6).trim();
-          if (d === '[DONE]') continue;
+          if (!d || d === '[DONE]') continue;
           try {
             const p = JSON.parse(d);
-            if (p.type === 'content_block_delta' && p.delta?.text) {
-              accumulated += p.delta.text;
+            const text = p.candidates?.[0]?.content?.parts?.map(x => x.text || '').join('') || '';
+            if (text) {
+              accumulated += text;
               streamEl.innerHTML = escapeHtml(accumulated.slice(-1000)) + '<span class="streaming-cursor"></span>';
             }
           } catch(e) {}
